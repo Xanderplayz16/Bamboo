@@ -6,8 +6,6 @@ from ursina.prefabs.dropdown_menu import DropdownMenu, DropdownMenuButton
 from nodes import *
 import os
 
-# os.system('pip install https://github.com/pokepetter/ursina/archive/master.zip --upgrade --force-reinstall')
-
 nodes = []
 
 def createNode(node):
@@ -45,9 +43,6 @@ addMenu = DropdownMenu(text = 'Add', buttons = (
     DropdownMenuButton(text = 'Audio', on_click = Func(createNode, AudioNode)),
     DropdownMenu(text = 'Lights', buttons = (
         DropdownMenuButton(text = 'Directional', on_click = Func(createNode, DirectionalLightNode)),
-        #DropdownMenuButton(text = 'Point', on_click = Func(DirectionalLightNode, 'PointLight')),
-        #DropdownMenuButton(text = 'Ambient', on_click = Func(DirectionalLightNode, 'AmbientLight')),
-        #DropdownMenuButton(text = 'Spot', on_click = Func(DirectionalLightNode, 'SpotLight')),
         )),
     ))
 
