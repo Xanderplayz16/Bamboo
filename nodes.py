@@ -2,7 +2,6 @@ from ursina import *
 from ursina.shaders.lit_with_shadows_shader import lit_with_shadows_shader
 from ursina.prefabs.checkbox import CheckBox
 from ursina.prefabs.dropdown_menu import DropdownMenu, DropdownMenuButton
-import operator
 
 class OperatorNode(Draggable):
     def __init__(self, text = 'Operator', position = (0, 0), scale = .3, color = color.black50):
