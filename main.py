@@ -6,8 +6,6 @@ from ursina.prefabs.dropdown_menu import DropdownMenu, DropdownMenuButton
 from nodes import *
 import os
 
-# os.system('pip install https://github.com/pokepetter/ursina/archive/master.zip --upgrade --force-reinstall')
-
 Text.default_font = 'assets/font.ttf'
 
 nodes = []
