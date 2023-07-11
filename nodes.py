@@ -2,6 +2,7 @@ from ursina import *
 from ursina.shaders.lit_with_shadows_shader import lit_with_shadows_shader
 from ursina.prefabs.checkbox import CheckBox
 from ursina.prefabs.dropdown_menu import DropdownMenu, DropdownMenuButton
+import operator
 
 class OperatorNode(Draggable):
     def __init__(self, text = 'Operator', position = (0, 0), scale = .3, color = color.black50):
@@ -26,6 +27,9 @@ class OperatorNode(Draggable):
         if not self.value.text is self.value.default_value:
             pass
 
+    def undo(self):
+        pass
+
 class VariableNode(Draggable):
     def __init__(self, text = 'Variable', position = (0, 0), scale = .3, color = color.black50):
         super().__init__(
@@ -43,6 +47,9 @@ class VariableNode(Draggable):
     def make(self):
         if not self.value.text is self.value.default_value:
             self.var = float(self.value.text)
+
+    def undo(self):
+        del self.var
 
 class ModelNode(Draggable):
     def __init__(self, text = 'Model', position = (0, 0), scale = .3, color = color.black50):
@@ -64,9 +71,12 @@ class ModelNode(Draggable):
         self.shadowsBox = CheckBox(scale = .08, parent = self.shadows)
 
     def make(self):
-        model = Entity(model = self.path.text)
+        self.m = Entity(model = self.path.text)
         if self.shadowsBox.state:
-            model.shader = lit_with_shadows_shader
+            self.m.shader = lit_with_shadows_shader
+
+    def undo(self):
+        destroy(self.m, delay = 0)
 
 class TextureNode(Draggable):
     def __init__(self, text = 'Texture', position = (0, 0), scale = .3, color = color.black50):
@@ -83,7 +93,10 @@ class TextureNode(Draggable):
         self.path = InputField(default_value = 'path', limit_content_to = '_./abcdefghijklmnopqrstuvwxyz', character_limit = 13, position = (0, .2, -.01), scale = (.9, .15), parent = self)
 
     def make(self):
-        load_texture(self.path.text)
+        self.tex = load_texture(self.path.text)
+
+    def undo(self):
+        del self.tex
 
 class AudioNode(Draggable):
     def __init__(self, text = 'Audio', position = (0, 0), scale = .3, color = color.black50):
@@ -99,16 +112,19 @@ class AudioNode(Draggable):
 
         self.path = InputField(default_value = 'path', limit_content_to = '_./abcdefghijklmnopqrstuvwxyz', character_limit = 13, position = (0, .2, -.01), scale = (.9, .15), parent = self)
 
-        self.autoplay = Entity(y = -.025, z = -.01, parent = self)
+        self.autoplay = Entity(position = (-.03, -.025, -.01), parent = self)
         self.autoplayText = Text(text = 'autoplay', position = (-.4, .035), scale = 3, parent = self.autoplay)
         self.autoplayBox = CheckBox(x = .1, scale = .08, parent = self.autoplay)
 
-        self.loop = Entity(y = -.14, z = -.01, parent = self)
+        self.loop = Entity(position = (-.03, -.14, -.01), parent = self)
         self.loopText = Text(text = 'loop', position = (-.4, .035), scale = 3, parent = self.loop)
         self.loopBox = CheckBox(x = .1, scale = .08, parent = self.loop)
 
     def make(self):
-        Audio(self.path.text, autoplay = self.autoplayBox.state, loop = self.loopBox.state)
+        self.audio = Audio(self.path.text, autoplay = self.autoplayBox.state, loop = self.loopBox.state)
+
+    def undo(self):
+        destroy(self.audio, delay = 0)
 
 class DirectionalLightNode(Draggable):
     def __init__(self, text = 'Directional Light', position = (0, 0), scale = .3, color = color.black50):
@@ -120,10 +136,13 @@ class DirectionalLightNode(Draggable):
             color = color,
             highlight_color = color)
 
-        self.shadows = Entity(y = .15, z = -.01, parent = self)
+        self.shadows = Entity(position = (-.03, .15, -.01), parent = self)
         self.shadowsText = Text(text = 'shadows', position = (-.4, .035), scale = 3, parent = self.shadows)
         self.shadowsBox = CheckBox(scale = .08, parent = self.shadows)
 
     def make(self):
         self.sun = DirectionalLight(shadows = self.shadowsBox.state)
         self.sun.look_at(Vec3(1,-1,-1))
+
+    def undo(self):
+        destroy(self.sun, delay = 0)

@@ -6,6 +6,10 @@ from ursina.prefabs.dropdown_menu import DropdownMenu, DropdownMenuButton
 from nodes import *
 import os
 
+# os.system('pip install https://github.com/pokepetter/ursina/archive/master.zip --upgrade --force-reinstall')
+
+Text.default_font = 'assets/font.ttf'
+
 nodes = []
 
 def createNode(node):
@@ -43,8 +47,17 @@ addMenu = DropdownMenu(text = 'Add', buttons = (
     DropdownMenuButton(text = 'Audio', on_click = Func(createNode, AudioNode)),
     DropdownMenu(text = 'Lights', buttons = (
         DropdownMenuButton(text = 'Directional', on_click = Func(createNode, DirectionalLightNode)),
+        #DropdownMenuButton(text = 'Point', on_click = Func(DirectionalLightNode, 'PointLight')),
+        #DropdownMenuButton(text = 'Ambient', on_click = Func(DirectionalLightNode, 'AmbientLight')),
+        #DropdownMenuButton(text = 'Spot', on_click = Func(DirectionalLightNode, 'SpotLight')),
         )),
     ))
+
+def input(key):
+    if not camera.ui.enabled and key == 'escape':
+        for i in range(len(nodes)):
+            nodes[i].undo()
+        camera.ui.enable()
 
 def update():
     addMenu.x = window.top_left.x + .25
