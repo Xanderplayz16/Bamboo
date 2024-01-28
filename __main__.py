@@ -3,7 +3,7 @@ from ursina import *
 app = Ursina(title = 'Bamboo', borderless = False, fullscreen = False, development_mode = False, vsync = True)
 
 from ursina.prefabs.dropdown_menu import DropdownMenu, DropdownMenuButton
-from nodes import *
+from .nodes import *
 import os
 
 Text.default_font = 'assets/font.ttf'
